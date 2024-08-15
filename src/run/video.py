@@ -4,9 +4,10 @@ from scanner.tools import scanner
 from scanner.tools import detector as detect
 from scanner.tools import tracker as track
 from scanner.tools import viewer
-import multiprocessing
+from concurrent.futures import ThreadPoolExecutor
 import datetime
 import time
+import os
 
 model = '../rtm_det_card_trainer.py'
 weights = "../work_dirs/rtm_det_card_trainer/epoch_10.pth"
@@ -15,13 +16,17 @@ size = 1080
 scoreThreshold = .5
 use_object_tracking = True
 show_video = False
-multiprocessing_enabled = False
+multithreading_enabled = True
+num_threads = os.cpu_count()
 
 # detection = {
 #     bbox,mask,score,label,track_id,hash, card_image,match
 # }
 
 def main():
+    # Record the start time
+    start_time = time.time()
+
     print("Starting process - inference with video")
 
     # Open the video file
@@ -41,6 +46,13 @@ def main():
     # Keep track of track_ids matched to cards
     tracked_matches = {}
 
+    # Initialize the thread pool
+    if multithreading_enabled is True:
+        print("Multithreading is ENABED - Creating thread pool")
+        pool = ThreadPoolExecutor(max_workers=num_threads)
+    else:
+        print("Multithreading is DISABLED")
+
     # Initialize the output video
     # output_path = 'output_video.mp4'
     # frame_width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -52,12 +64,6 @@ def main():
     # Define the codec and create a VideoWriter object
     # codec = cv2.VideoWriter_fourcc(*'mp4v')  # Codec for MP4 video
     # output_video = cv2.VideoWriter(f'output/{output_path}', codec, fps, (size, size))
-
-    # Record the start time
-    start_time = time.time()
-
-    # Create a multiprocessing Pool
-    pool = multiprocessing.Pool(12)
 
     while True:
         # Read the next frame
@@ -86,7 +92,7 @@ def main():
             if track_id in tracked_matches:
                 detection['match'] = tracked_matches[track_id]
 
-        if multiprocessing_enabled is True:
+        if multithreading_enabled is True:
             # Make hashes and matches to detections threaded
             scanner.getMatchesThreaded(pool, image_original, detections, mirror=False)
         else:
@@ -110,7 +116,7 @@ def main():
         scanner.drawMasks(image_copy, detections)
         scanner.writeCardLabels(image_copy, detections)
         scanner.writeTrackId(image_copy, detections)
-        
+
         frame_builder.add_image(image_copy)
 
         # Write the processed frame to the output video
