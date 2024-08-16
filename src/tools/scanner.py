@@ -15,7 +15,7 @@ check_flipped = False # if no match, rotate 180 and check again
 with open(f'data/{hash_filename}', 'r', encoding='utf-8') as json_file:
     hash_dict = json.load(json_file)
 
-def get_match_thread(detection, image, mirror):
+def get_match_pool(detection, image, mirror):
     if 'match' in detection:
         return detection['match']
     if 'track_id' not in detection:
@@ -23,27 +23,35 @@ def get_match_thread(detection, image, mirror):
     card_image = perspective_transform(image, detection['mask'], mirror)
     if card_image is None:
         return None
-    image_hash = hashImage(card_image)
-    match, _ = findMatch(image_hash)
+    image_hash = hash_image(card_image)
+    match, _ = find_match(image_hash)
     if match is None and check_flipped is True:
-        match = findFlippedMatch(card_image)
+        match = find_flipped_match(card_image)
     if match is not None:
         return match
     return None
 
 
-def getMatchesThreaded(pool, image, detections, mirror=False):
-    results = [pool.submit(get_match_thread, detection, image, mirror) for detection in detections]
+def get_matches_threaded(pool, image, detections, mirror=False):
+    results = [pool.submit(get_match_pool, detection, image, mirror) for detection in detections]
 
     for i, result in enumerate(results):
-        match = result.result()  # This blocks until result is ready
+        match = result.result() # Blocks until result is ready
         if match is not None:
             detections[i]['match'] = match
 
 
+def get_matches_multiprocessed(pool, image, detections, mirror=False):
+    results = [pool.apply_async(get_match_pool, args=(detection, image, mirror)) for detection in detections]
+    # Update detections with the results
+    for i, result in enumerate(results):
+        match = result.get() # Blocks until result is ready
+        if match is not None:
+            detections[i]['match'] = match
+
 
 #hashes a cv2 image
-def hashImage(img):
+def hash_image(img):
     # Convert the NumPy array to a PIL image
     img = Image.fromarray(img)
 
@@ -68,7 +76,7 @@ def hamming_distance(hash1, hash2):
     return sum(ch1 != ch2 for ch1, ch2 in zip(hash1, hash2))
 
 
-def findMatch(hash_a):
+def find_match(hash_a):
     best_match = None
     min_sim = min_similarity
 
@@ -87,7 +95,7 @@ def findMatch(hash_a):
     return matchString, min_sim
 
 
-# def findMatchBak(hash_a):
+# def find_matchBak(hash_a):
 #     hash_dict = get_hashes('hashes64x64.txt')
 #     best_match = None
 #     min_similarity = 14 # lower is more exact
@@ -104,15 +112,15 @@ def findMatch(hash_a):
 #     return best_match
 
 
-def findFlippedMatch(card_image):
+def find_flipped_match(card_image):
     card_image = cv2.rotate(card_image, cv2.ROTATE_180)
-    image_hash = hashImage(card_image)
-    match, _ = findMatch(image_hash)
+    image_hash = hash_image(card_image)
+    match, _ = find_match(image_hash)
     return match
 
 
 
-def writeTrackId(image, detections):
+def write_track_id(image, detections):
     for detection in detections:
         bbox = detection['bbox']
         track_id = detection.get('track_id')
@@ -123,7 +131,7 @@ def writeTrackId(image, detections):
         cv2.putText(image, str(track_id), (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
 
 
-def writeCardLabels(image, detections):
+def write_card_labels(image, detections):
     for detection in detections:
         if 'match' not in detection or detection['match'] is None:
             continue
@@ -132,10 +140,10 @@ def writeCardLabels(image, detections):
         center_x = int((bbox[0] + bbox[2]) / 2)
         center_y = int((bbox[1] + bbox[3]) / 2)
         center = (center_x, center_y)
-        writeLabel(image, center, detection['match'])
+        write_label(image, center, detection['match'])
 
 
-def writeLabelRotated(img, loc, text, rotation=-20):
+def write_label_rotated(img, loc, text, rotation=-20):
     # Define the main text and its properties
     font_face = cv2.FONT_HERSHEY_SIMPLEX
     font_scale = .2
@@ -164,7 +172,7 @@ def writeLabelRotated(img, loc, text, rotation=-20):
     return result
 
 
-def writeLabel(image, loc, text):
+def write_label(image, loc, text):
     [center_x, center_y] = loc
     font=cv2.FONT_HERSHEY_SIMPLEX
     font_scale=.6
@@ -192,31 +200,31 @@ def writeLabel(image, loc, text):
     cv2.putText(image, text, (text_x, text_y), font, font_scale, text_color, thickness)
 
 
-def hashCards(detections, include_flipped=False):
+def hash_cards(detections, include_flipped=False):
     for detection in detections:
         # Skip if match is already found and tracked
         if 'match' in detection:
             continue
         if 'card_image' in detection:
-            image_hash = hashImage(detection['card_image'])
+            image_hash = hash_image(detection['card_image'])
             #print(image_hash)
             detection['hash'] = image_hash
             if include_flipped is True:
                 card_image = cv2.rotate(detection['card_image'], cv2.ROTATE_180)
-                image_hash = hashImage(card_image)
+                image_hash = hash_image(card_image)
                 detection['hash_flipped'] = image_hash
 
 
-def matchHashes(detections, include_flipped=False):
+def match_hashes(detections, include_flipped=False):
     for detection in detections:
         # Skip if match is already found and tracked
         if 'match' in detection:
             continue
         if 'hash' in detection:
             # print(detection['hash'])
-            match1, sim1 = findMatch(detection['hash'])
+            match1, sim1 = find_match(detection['hash'])
             if include_flipped is True:
-                match2, sim2 = findMatch(detection['hash_flipped'])
+                match2, sim2 = find_match(detection['hash_flipped'])
                 if match1 is None and match2 is None:
                     continue
                 elif match1 is None:
@@ -232,22 +240,22 @@ def matchHashes(detections, include_flipped=False):
             if 'match' in detection:
                 continue
             elif match1 is None and check_flipped is True:
-                match1 = findFlippedMatch(detection['card_image'])
+                match1 = find_flipped_match(detection['card_image'])
             if match1 is not None:
                 detection['match'] = match1
 
 
-def drawBoxes(image, detections):
+def draw_boxes(image, detections):
     for detection in detections:
-        drawBox(image, detection['bbox'])
+        draw_box(image, detection['bbox'])
 
 
-def drawMasks(image, detections):
+def draw_masks(image, detections):
     for detection in detections:
-        drawMask(image, detection['mask'])
+        draw_mask(image, detection['mask'])
 
 
-def processMasksToCards(image, detections, mirror):
+def process_masks_to_cards(image, detections, mirror):
     for detection in detections:
         # Skip if match is already found and tracked
         if 'match' in detection:
@@ -257,7 +265,7 @@ def processMasksToCards(image, detections, mirror):
             #print('not none')
             detection['card_image'] = card_image
 
-def readFrame(camera, size):
+def read_frame(camera, size):
     # Read a frame from the webcam
     ret, frame = camera.read()
 
@@ -272,7 +280,7 @@ def readFrame(camera, size):
 
 
 # Read and resize the image
-def readImage(img, size):
+def read_image(img, size):
     img = cv2.imread(img)
     img = cv2.resize(img, (size, size))
     return img
@@ -367,12 +375,12 @@ def get_card_dimensions(corners):
     return width, height
 
 
-def drawBox(img, bbox):
+def draw_box(img, bbox):
     xmin, ymin, xmax, ymax = map(int, bbox)
     cv2.rectangle(img, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
 
 
-def drawMask(original_image, mask):
+def draw_mask(original_image, mask):
     color = (0, 0, 255)
     alpha = 0.4
 
@@ -400,7 +408,7 @@ def save_screenshot(img):
     print(f"Screenshot saved to '{screenshot_filename}'")
 
 
-def showImageWait(img):
+def show_image_wait(img):
     print('Press s for screenshot or any key to continue')
     cv2.imshow('Image', img)
     key = cv2.waitKey(0) & 0xFF

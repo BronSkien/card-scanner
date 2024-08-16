@@ -5,6 +5,7 @@ from scanner.tools import detector as detect
 from scanner.tools import tracker as track
 from scanner.tools import viewer
 from concurrent.futures import ThreadPoolExecutor
+import multiprocessing
 import datetime
 import time
 import os
@@ -17,7 +18,7 @@ scoreThreshold = .5
 use_object_tracking = True
 show_video = False
 multithreading_enabled = True
-num_threads = os.cpu_count()
+multiprocessing_enabled = False # Can use multithreading OR multiprocessing
 
 # detection = {
 #     bbox,mask,score,label,track_id,hash, card_image,match
@@ -48,10 +49,13 @@ def main():
 
     # Initialize the thread pool
     if multithreading_enabled is True:
-        print("Multithreading is ENABED - Creating thread pool")
-        pool = ThreadPoolExecutor(max_workers=num_threads)
+        print("MultiTHREADING is ENABED - Creating thread pool")
+        pool = ThreadPoolExecutor(max_workers=os.cpu_count())
+    elif multiprocessing_enabled is True:
+        print("MultiPROCESSING is ENABED - Creating process pool")
+        pool = multiprocessing.Pool(12)
     else:
-        print("Multithreading is DISABLED")
+        print("Multithreading and multiprocessing are DISABLED")
 
     # Initialize the output video
     # output_path = 'output_video.mp4'
@@ -94,12 +98,14 @@ def main():
 
         if multithreading_enabled is True:
             # Make hashes and matches to detections threaded
-            scanner.getMatchesThreaded(pool, image_original, detections, mirror=False)
+            scanner.get_matches_threaded(pool, image_original, detections, mirror=False)
+        elif multiprocessing_enabled is True:
+            scanner.get_matches_multiprocessed(pool, image_original, detections, mirror=False)
         else:
             # Make hashes and matches to detections non-threaded
-            scanner.processMasksToCards(image_original, detections, mirror=False)
-            scanner.hashCards(detections)
-            scanner.matchHashes(detections)
+            scanner.process_masks_to_cards(image_original, detections, mirror=False)
+            scanner.hash_cards(detections)
+            scanner.match_hashes(detections)
 
         # Store tracked matches
         for detection in detections:
@@ -112,10 +118,10 @@ def main():
 
 
         # Draw elements
-        scanner.drawBoxes(image_copy, detections)
-        scanner.drawMasks(image_copy, detections)
-        scanner.writeCardLabels(image_copy, detections)
-        scanner.writeTrackId(image_copy, detections)
+        scanner.draw_boxes(image_copy, detections)
+        scanner.draw_masks(image_copy, detections)
+        scanner.write_card_labels(image_copy, detections)
+        scanner.write_track_id(image_copy, detections)
 
         frame_builder.add_image(image_copy)
 
