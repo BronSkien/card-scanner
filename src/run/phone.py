@@ -1,6 +1,4 @@
 
-# Run inference on video feed from a phone connected via usb cable or over ip
-
 import cv2
 from scanner.tools import scanner
 from scanner.tools import detector as detect
@@ -70,9 +68,9 @@ def main():
                 detection['match'] = tracked_matches[track_id]
 
         # Make hashes and matches to detections
-        scanner.processMasksToCards(image_original, detections, mirror=True)
-        scanner.hashCards(detections)
-        scanner.matchHashes(detections)
+        scanner.process_mask_to_cards(image_original, detections, mirror=True)
+        scanner.hash_cards(detections)
+        scanner.match_hashes(detections)
 
         # Store tracked matches
         for detection in detections:
@@ -84,10 +82,10 @@ def main():
                     print(f'Match found: id {track_id} {match}')
 
         # Draw elements
-        scanner.drawBoxes(image_copy, detections)
-        scanner.drawMasks(image_copy, detections)
-        scanner.writeCardLabels(image_copy, detections)
-        scanner.writeTrackId(image_copy, detections)
+        scanner.draw_boxes(image_copy, detections)
+        scanner.draw_masks(image_copy, detections)
+        scanner.write_card_labels(image_copy, detections)
+        scanner.write_track_id(image_copy, detections)
 
         # Display the resized frame
         cv2.imshow('Result Image', image_copy)

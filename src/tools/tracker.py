@@ -1,8 +1,5 @@
-
-# Tracks the detections between frames
-
 import numpy as np
-from sort.sort import Sort
+from ..sort.sort import Sort
 
 class Tracker:
     # Initialize the SORT tracker

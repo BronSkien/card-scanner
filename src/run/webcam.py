@@ -1,6 +1,4 @@
 
-# Run inference on a connected webcam real time
-
 import cv2
 import scanner
 from scanner.tools import detector as detect
@@ -49,7 +47,7 @@ def main():
     frame_builder = viewer.VideoFrameBuilder(fps=fps, rows=2, num_images_per_frame=6, is_video=True, max_frame_size=1080*2)
 
     while True:
-        image_original = scanner.readFrame(camera, size)
+        image_original = scanner.read_frame(camera, size)
         image_original = cv2.flip(image_original, 1)
         if image_original is None:
             break
@@ -70,9 +68,9 @@ def main():
         #         detection['match'] = tracked_matches[track_id]
 
         # Make hashes and matches to detections
-        scanner.processMasksToCards(image_original, detections, mirror=True)
-        scanner.hashCards(detections)
-        scanner.matchHashes(detections)
+        scanner.process_masks_to_cards(image_original, detections, mirror=True)
+        scanner.hash_cards(detections)
+        scanner.match_hashes(detections)
 
         # Store tracked matches
         for detection in detections:
@@ -84,14 +82,14 @@ def main():
                     print(f'Match found: id {track_id} {match}')
 
         # Draw elements
-        scanner.drawBoxes(image_copy, detections)
-        scanner.drawMasks(image_copy, detections)
+        scanner.draw_boxes(image_copy, detections)
+        scanner.draw_masks(image_copy, detections)
 
-        scanner.writeTrackId(image_copy, detections)
+        scanner.write_track_id(image_copy, detections)
 
         frame_builder.add_image(image_copy, 1, "ML Detections")
 
-        scanner.writeCardLabels(image_original, detections)
+        scanner.write_card_labels(image_original, detections)
 
         if len(detections) > 0:
             if 'card_image' in detections[0]:
@@ -107,3 +105,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# download all images for all current sets
+# hash all to text file
+# add all hashes to vp tree

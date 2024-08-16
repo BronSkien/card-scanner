@@ -1,6 +1,4 @@
 
-# Run inference on a single image
-
 import cv2
 from scanner.tools import scanner
 from scanner.tools import detector as detect
@@ -17,7 +15,7 @@ include_flipped = True
 def main():
     print("Starting process - inference with image")
 
-    image_original = scanner.readImage(imagePath, size)
+    image_original = scanner.read_image(imagePath, size)
     image_copy = image_original.copy()
 
     # Initialize the DetInferencer
@@ -25,13 +23,13 @@ def main():
 
     detections = detector.detect_objects(image_original, scoreThreshold)
 
-    scanner.processMasksToCards(image_original, detections, mirror)
-    scanner.hashCards(detections, include_flipped)
-    scanner.matchHashes(detections, include_flipped)
+    scanner.process_masks_to_cards(image_original, detections, mirror)
+    scanner.hash_cards(detections, include_flipped)
+    scanner.match_hashes(detections, include_flipped)
 
-    scanner.drawBoxes(image_copy, detections)
-    scanner.drawMasks(image_copy, detections)
-    scanner.writeCardLabels(image_copy, detections)
+    scanner.draw_boxes(image_copy, detections)
+    scanner.draw_masks(image_copy, detections)
+    scanner.write_card_labels(image_copy, detections)
 
     # for detection in detections:
     #     if 'card_image' in detection:
@@ -43,7 +41,7 @@ def main():
         cv2.imwrite(f'output/{output_path}', image_copy)
         print('Image saved successfully.')
 
-    scanner.showImageWait(image_copy)
+    scanner.show_image_wait(image_copy)
 
 
 if __name__ == '__main__':
