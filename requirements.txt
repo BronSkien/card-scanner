@@ -1,0 +1,7 @@
+opencv-python
+mmdet
+mmcv
+numpy
+Pillow
+imagehash
+sort-tracker
