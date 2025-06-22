@@ -68,7 +68,7 @@ def main():
                 detection['match'] = tracked_matches[track_id]
 
         # Make hashes and matches to detections
-        scanner.process_mask_to_cards(image_original, detections, mirror=True)
+        scanner.process_masks_to_cards(image_original, detections, mirror=True)
         scanner.hash_cards(detections)
         scanner.match_hashes(detections)
 
