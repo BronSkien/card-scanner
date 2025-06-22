@@ -11,6 +11,12 @@ Welcome to the Pokémon card scanner that can use any video input such as webcam
 
 This is a working proof of concept built in Python with the goal of integrating it as a feature into my React Native Pokémon card collection tracking app. Some sample code is provided for read-only.
 
+## Installation
+
+```bash
+pip install -r requirements.txt
+```
+
 There are 3 main steps in the process that I focused on:
 
 1.  Object Detection and Segmentation - Find the cards
