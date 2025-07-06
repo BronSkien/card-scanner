@@ -127,13 +127,34 @@ def find_match(card_hash, hash_dict, threshold=10):
 # Process image and identify cards
 def process_image(image_data):
     try:
+        # Check if the image_data is properly formatted
+        if ',' in image_data:
+            # Handle data URLs like "data:image/jpeg;base64,/9j/4AAQSkZ..."
+            image_data = image_data.split(',', 1)[1]
+        
+        # Strip any whitespace
+        image_data = image_data.strip()
+        
         # Convert base64 to image
-        img_bytes = base64.b64decode(image_data)
-        img_io = BytesIO(img_bytes)
-        img = Image.open(img_io)
+        try:
+            img_bytes = base64.b64decode(image_data)
+            img_io = BytesIO(img_bytes)
+            img = Image.open(img_io)
+        except Exception as img_error:
+            return {
+                "success": False,
+                "error": f"Invalid base64 image data: {str(img_error)}",
+                "help": "Make sure you're sending a valid base64-encoded image without any wrapping or formatting issues."
+            }
         
         # Load hash database
         hash_dict = load_hash_db()
+        if not hash_dict:
+            return {
+                "success": False,
+                "error": "Hash database is empty or could not be loaded",
+                "path_checked": hash_db_file
+            }
         
         # Generate hash
         card_hash = hash_image(img)
@@ -160,7 +181,12 @@ def process_image(image_data):
             }
     
     except Exception as e:
-        return {"error": f"Error processing image: {str(e)}"}
+        import traceback
+        return {
+            "success": False,
+            "error": f"Error processing image: {str(e)}",
+            "traceback": traceback.format_exc()
+        }
 
 # API endpoint for card identification
 @app.route('/identify', methods=['POST'])
