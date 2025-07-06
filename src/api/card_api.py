@@ -35,10 +35,17 @@ def load_hash_db():
 # Load PokemonTCG API key
 def load_api_key():
     try:
+        # First try to get API key from environment variable
+        api_key = os.environ.get('POKEMON_TCG_API_KEY')
+        if api_key:
+            return api_key
+            
+        # Fall back to credentials file if environment variable is not set
         if os.path.exists(api_key_file):
             with open(api_key_file, 'r') as f:
                 credentials = json.load(f)
                 return credentials.get('api_key')
+                
         return None
     except Exception as e:
         print(f"Error loading API key: {e}")

@@ -8,9 +8,9 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./credentials.json:/app/credentials.json:ro
       - ./src/tools:/app/tools
       - ./src/data:/app/data
     restart: unless-stopped
     environment:
       - PYTHONPATH=/app
+      - POKEMON_TCG_API_KEY=your_api_key_here  # Replace with your actual API key
