@@ -10,8 +10,17 @@ from flask import Flask, request, jsonify
 
 # Configuration
 hash_size = 16  # bytes - must match the scanner.py setting
-hash_db_file = "../data/hashes_dphash_16.json"  # Path to the hash database
-api_key_file = "../../credentials.json"  # Path to PokemonTCG API key file
+# Support both Docker and local development paths
+if os.path.exists("/app/data/hashes_dphash_16.json"):
+    hash_db_file = "/app/data/hashes_dphash_16.json"  # Docker path
+else:
+    hash_db_file = "../data/hashes_dphash_16.json"  # Local development path
+
+# Similarly for API key file
+if os.path.exists("/app/credentials.json"):
+    api_key_file = "/app/credentials.json"  # Docker path
+else:
+    api_key_file = "../../credentials.json"  # Local development path
 
 # Initialize Flask app
 app = Flask(__name__)
