@@ -27,4 +27,4 @@ COPY src/data /app/data/
 EXPOSE 5000
 
 # Run the application with gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "card_api:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "simple_card_api:app"]
