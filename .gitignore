@@ -8,4 +8,5 @@
 /src/data/temp_hashes.json
 
 # API credentials
+.env
 credentials.json
