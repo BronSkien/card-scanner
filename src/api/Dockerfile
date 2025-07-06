@@ -19,9 +19,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the API code
 COPY src/api/*.py /app/
 
-# Copy tools and data directories
+# Copy tools directory
 COPY src/tools /app/tools/
-COPY src/data /app/data/
+
+# Create data directory and copy hash database
+RUN mkdir -p /app/data
+COPY src/data/hashes_dphash_16.json /app/data/
 
 # Make port 5000 available
 EXPOSE 5000

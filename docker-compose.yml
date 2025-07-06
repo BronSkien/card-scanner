@@ -12,5 +12,5 @@ services:
       - PYTHONPATH=/app
       - POKEMON_TCG_API_KEY=${POKEMON_TCG_API_KEY}
     volumes:
-      # Mount the hash database file
-      - ./src/data/hashes_dphash_16.json:/app/data/hashes_dphash_16.json
+      # Mount credentials file if you prefer using it instead of environment variable
+      - ./credentials.json:/app/credentials.json
