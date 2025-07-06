@@ -6,16 +6,22 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     libglib2.0-0 \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
+# Create directory structure
+RUN mkdir -p /app/tools /app/data
+
 # Copy requirements first for better caching
-COPY requirements.txt .
+COPY src/api/requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code
-COPY . /app/
+# Copy the API code
+COPY src/api/*.py /app/
 
-# We'll copy the tools and data directories at build time from the context
+# Copy tools and data directories
+COPY src/tools /app/tools/
+COPY src/data /app/data/
 
 # Make port 5000 available
 EXPOSE 5000

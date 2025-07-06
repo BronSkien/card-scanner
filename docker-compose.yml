@@ -7,9 +7,6 @@ services:
       dockerfile: src/api/Dockerfile
     ports:
       - "5000:5000"
-    volumes:
-      - ./src/tools:/app/tools
-      - ./src/data:/app/data
     restart: unless-stopped
     environment:
       - PYTHONPATH=/app
