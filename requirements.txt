@@ -5,3 +5,4 @@ numpy
 Pillow
 imagehash
 sort-tracker
+pokemontcgsdk

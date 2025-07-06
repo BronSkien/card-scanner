@@ -1,0 +1,913 @@
+{
+  "summary": {
+    "total_cards": 100,
+    "matched_cards": 100,
+    "mismatched_cards": 0,
+    "no_match_cards": 0,
+    "error_cards": 0,
+    "match_rate": 100.0,
+    "time_taken": 12.65847897529602
+  },
+  "results": [
+    {
+      "file_path": "../../card_images\\base1\\11.png",
+      "expected_id": "base1-11",
+      "match_id": "base1-11",
+      "match_name": "Nidoking",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\101.png",
+      "expected_id": "base1-101",
+      "match_id": "base1-101",
+      "match_name": "Psychic Energy",
+      "distance": 7,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\12.png",
+      "expected_id": "base1-12",
+      "match_id": "base1-12",
+      "match_name": "Ninetales",
+      "distance": 4,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\1.png",
+      "expected_id": "base1-1",
+      "match_id": "base1-1",
+      "match_name": "Alakazam",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\100.png",
+      "expected_id": "base1-100",
+      "match_id": "base1-100",
+      "match_name": "Lightning Energy",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\13.png",
+      "expected_id": "base1-13",
+      "match_id": "base1-13",
+      "match_name": "Poliwrath",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\10.png",
+      "expected_id": "base1-10",
+      "match_id": "base1-10",
+      "match_name": "Mewtwo",
+      "distance": 4,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\102.png",
+      "expected_id": "base1-102",
+      "match_id": "base1-102",
+      "match_name": "Water Energy",
+      "distance": 4,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\18.png",
+      "expected_id": "base1-18",
+      "match_id": "base1-18",
+      "match_name": "Dragonair",
+      "distance": 6,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\16.png",
+      "expected_id": "base1-16",
+      "match_id": "base1-16",
+      "match_name": "Zapdos",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\15.png",
+      "expected_id": "base1-15",
+      "match_id": "base1-15",
+      "match_name": "Venusaur",
+      "distance": 0,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\17.png",
+      "expected_id": "base1-17",
+      "match_id": "base1-17",
+      "match_name": "Beedrill",
+      "distance": 1,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\14.png",
+      "expected_id": "base1-14",
+      "match_id": "base1-14",
+      "match_name": "Raichu",
+      "distance": 1,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\2.png",
+      "expected_id": "base1-2",
+      "match_id": "base1-2",
+      "match_name": "Blastoise",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\20.png",
+      "expected_id": "base1-20",
+      "match_id": "base1-20",
+      "match_name": "Electabuzz",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\19.png",
+      "expected_id": "base1-19",
+      "match_id": "base1-19",
+      "match_name": "Dugtrio",
+      "distance": 0,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\22.png",
+      "expected_id": "base1-22",
+      "match_id": "base1-22",
+      "match_name": "Pidgeotto",
+      "distance": 1,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\25.png",
+      "expected_id": "base1-25",
+      "match_id": "base1-25",
+      "match_name": "Dewgong",
+      "distance": 0,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\21.png",
+      "expected_id": "base1-21",
+      "match_id": "base1-21",
+      "match_name": "Electrode",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\23.png",
+      "expected_id": "base1-23",
+      "match_id": "base1-23",
+      "match_name": "Arcanine",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\24.png",
+      "expected_id": "base1-24",
+      "match_id": "base1-24",
+      "match_name": "Charmeleon",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\26.png",
+      "expected_id": "base1-26",
+      "match_id": "base1-26",
+      "match_name": "Dratini",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\27.png",
+      "expected_id": "base1-27",
+      "match_id": "base1-27",
+      "match_name": "Farfetch'd",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\28.png",
+      "expected_id": "base1-28",
+      "match_id": "base1-28",
+      "match_name": "Growlithe",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\30.png",
+      "expected_id": "base1-30",
+      "match_id": "base1-30",
+      "match_name": "Ivysaur",
+      "distance": 4,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\29.png",
+      "expected_id": "base1-29",
+      "match_id": "base1-29",
+      "match_name": "Haunter",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\31.png",
+      "expected_id": "base1-31",
+      "match_id": "base1-31",
+      "match_name": "Jynx",
+      "distance": 4,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\32.png",
+      "expected_id": "base1-32",
+      "match_id": "base1-32",
+      "match_name": "Kadabra",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\33.png",
+      "expected_id": "base1-33",
+      "match_id": "base1-33",
+      "match_name": "Kakuna",
+      "distance": 4,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\3.png",
+      "expected_id": "base1-3",
+      "match_id": "base1-3",
+      "match_name": "Chansey",
+      "distance": 1,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\35.png",
+      "expected_id": "base1-35",
+      "match_id": "base1-35",
+      "match_name": "Magikarp",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\34.png",
+      "expected_id": "base1-34",
+      "match_id": "base1-34",
+      "match_name": "Machoke",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\37.png",
+      "expected_id": "base1-37",
+      "match_id": "base1-37",
+      "match_name": "Nidorino",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\40.png",
+      "expected_id": "base1-40",
+      "match_id": "base1-40",
+      "match_name": "Raticate",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\36.png",
+      "expected_id": "base1-36",
+      "match_id": "base1-36",
+      "match_name": "Magmar",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\42.png",
+      "expected_id": "base1-42",
+      "match_id": "base1-42",
+      "match_name": "Wartortle",
+      "distance": 1,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\38.png",
+      "expected_id": "base1-38",
+      "match_id": "base1-38",
+      "match_name": "Poliwhirl",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\39.png",
+      "expected_id": "base1-39",
+      "match_id": "base1-39",
+      "match_name": "Porygon",
+      "distance": 0,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\41.png",
+      "expected_id": "base1-41",
+      "match_id": "base1-41",
+      "match_name": "Seel",
+      "distance": 4,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\4.png",
+      "expected_id": "base1-4",
+      "match_id": "base1-4",
+      "match_name": "Charizard",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\44.png",
+      "expected_id": "base1-44",
+      "match_id": "base1-44",
+      "match_name": "Bulbasaur",
+      "distance": 4,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\46.png",
+      "expected_id": "base1-46",
+      "match_id": "base1-46",
+      "match_name": "Charmander",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\48.png",
+      "expected_id": "base1-48",
+      "match_id": "base1-48",
+      "match_name": "Doduo",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\47.png",
+      "expected_id": "base1-47",
+      "match_id": "base1-47",
+      "match_name": "Diglett",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\45.png",
+      "expected_id": "base1-45",
+      "match_id": "base1-45",
+      "match_name": "Caterpie",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\49.png",
+      "expected_id": "base1-49",
+      "match_id": "base1-49",
+      "match_name": "Drowzee",
+      "distance": 4,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\5.png",
+      "expected_id": "base1-5",
+      "match_id": "base1-5",
+      "match_name": "Clefairy",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\43.png",
+      "expected_id": "base1-43",
+      "match_id": "base1-43",
+      "match_name": "Abra",
+      "distance": 1,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\54.png",
+      "expected_id": "base1-54",
+      "match_id": "base1-54",
+      "match_name": "Metapod",
+      "distance": 6,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\51.png",
+      "expected_id": "base1-51",
+      "match_id": "base1-51",
+      "match_name": "Koffing",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\50.png",
+      "expected_id": "base1-50",
+      "match_id": "base1-50",
+      "match_name": "Gastly",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\53.png",
+      "expected_id": "base1-53",
+      "match_id": "base1-53",
+      "match_name": "Magnemite",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\55.png",
+      "expected_id": "base1-55",
+      "match_id": "base1-55",
+      "match_name": "Nidoran \u2642",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\57.png",
+      "expected_id": "base1-57",
+      "match_id": "base1-57",
+      "match_name": "Pidgey",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\56.png",
+      "expected_id": "base1-56",
+      "match_id": "base1-56",
+      "match_name": "Onix",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\52.png",
+      "expected_id": "base1-52",
+      "match_id": "base1-52",
+      "match_name": "Machop",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\6.png",
+      "expected_id": "base1-6",
+      "match_id": "base1-6",
+      "match_name": "Gyarados",
+      "distance": 1,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\58.png",
+      "expected_id": "base1-58",
+      "match_id": "base1-58",
+      "match_name": "Pikachu",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\61.png",
+      "expected_id": "base1-61",
+      "match_id": "base1-61",
+      "match_name": "Rattata",
+      "distance": 1,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\59.png",
+      "expected_id": "base1-59",
+      "match_id": "base1-59",
+      "match_name": "Poliwag",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\62.png",
+      "expected_id": "base1-62",
+      "match_id": "base1-62",
+      "match_name": "Sandshrew",
+      "distance": 6,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\63.png",
+      "expected_id": "base1-63",
+      "match_id": "base1-63",
+      "match_name": "Squirtle",
+      "distance": 4,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\60.png",
+      "expected_id": "base1-60",
+      "match_id": "base1-60",
+      "match_name": "Ponyta",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\64.png",
+      "expected_id": "base1-64",
+      "match_id": "base1-64",
+      "match_name": "Starmie",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\66.png",
+      "expected_id": "base1-66",
+      "match_id": "base1-66",
+      "match_name": "Tangela",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\71.png",
+      "expected_id": "base1-71",
+      "match_id": "base1-71",
+      "match_name": "Computer Search",
+      "distance": 6,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\70.png",
+      "expected_id": "base1-70",
+      "match_id": "base1-70",
+      "match_name": "Clefairy Doll",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\65.png",
+      "expected_id": "base1-65",
+      "match_id": "base1-65",
+      "match_name": "Staryu",
+      "distance": 4,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\68.png",
+      "expected_id": "base1-68",
+      "match_id": "base1-68",
+      "match_name": "Vulpix",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\67.png",
+      "expected_id": "base1-67",
+      "match_id": "base1-67",
+      "match_name": "Voltorb",
+      "distance": 6,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\7.png",
+      "expected_id": "base1-7",
+      "match_id": "base1-7",
+      "match_name": "Hitmonchan",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\69.png",
+      "expected_id": "base1-69",
+      "match_id": "base1-69",
+      "match_name": "Weedle",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\75.png",
+      "expected_id": "base1-75",
+      "match_id": "base1-75",
+      "match_name": "Lass",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\76.png",
+      "expected_id": "base1-76",
+      "match_id": "base1-76",
+      "match_name": "Pok\u00e9mon Breeder",
+      "distance": 4,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\72.png",
+      "expected_id": "base1-72",
+      "match_id": "base1-72",
+      "match_name": "Devolution Spray",
+      "distance": 8,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\74.png",
+      "expected_id": "base1-74",
+      "match_id": "base1-74",
+      "match_name": "Item Finder",
+      "distance": 6,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\73.png",
+      "expected_id": "base1-73",
+      "match_id": "base1-73",
+      "match_name": "Impostor Professor Oak",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\77.png",
+      "expected_id": "base1-77",
+      "match_id": "base1-77",
+      "match_name": "Pok\u00e9mon Trader",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\78.png",
+      "expected_id": "base1-78",
+      "match_id": "base1-78",
+      "match_name": "Scoop Up",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\79.png",
+      "expected_id": "base1-79",
+      "match_id": "base1-79",
+      "match_name": "Super Energy Removal",
+      "distance": 4,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\8.png",
+      "expected_id": "base1-8",
+      "match_id": "base1-8",
+      "match_name": "Machamp",
+      "distance": 1,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\84.png",
+      "expected_id": "base1-84",
+      "match_id": "base1-84",
+      "match_name": "PlusPower",
+      "distance": 6,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\82.png",
+      "expected_id": "base1-82",
+      "match_id": "base1-82",
+      "match_name": "Full Heal",
+      "distance": 6,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\83.png",
+      "expected_id": "base1-83",
+      "match_id": "base1-83",
+      "match_name": "Maintenance",
+      "distance": 9,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\81.png",
+      "expected_id": "base1-81",
+      "match_id": "base1-81",
+      "match_name": "Energy Retrieval",
+      "distance": 6,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\85.png",
+      "expected_id": "base1-85",
+      "match_id": "base1-85",
+      "match_name": "Pok\u00e9mon Center",
+      "distance": 7,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\80.png",
+      "expected_id": "base1-80",
+      "match_id": "base1-80",
+      "match_name": "Defender",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\86.png",
+      "expected_id": "base1-86",
+      "match_id": "base1-86",
+      "match_name": "Pok\u00e9mon Flute",
+      "distance": 7,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\87.png",
+      "expected_id": "base1-87",
+      "match_id": "base1-87",
+      "match_name": "Pok\u00e9dex",
+      "distance": 7,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\91.png",
+      "expected_id": "base1-91",
+      "match_id": "base1-91",
+      "match_name": "Bill",
+      "distance": 5,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\92.png",
+      "expected_id": "base1-92",
+      "match_id": "base1-92",
+      "match_name": "Energy Removal",
+      "distance": 8,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\89.png",
+      "expected_id": "base1-89",
+      "match_id": "base1-89",
+      "match_name": "Revive",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\90.png",
+      "expected_id": "base1-90",
+      "match_id": "base1-90",
+      "match_name": "Super Potion",
+      "distance": 4,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\88.png",
+      "expected_id": "base1-88",
+      "match_id": "base1-88",
+      "match_name": "Professor Oak",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\9.png",
+      "expected_id": "base1-9",
+      "match_id": "base1-9",
+      "match_name": "Magneton",
+      "distance": 0,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\93.png",
+      "expected_id": "base1-93",
+      "match_id": "base1-93",
+      "match_name": "Gust of Wind",
+      "distance": 6,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\95.png",
+      "expected_id": "base1-95",
+      "match_id": "base1-95",
+      "match_name": "Switch",
+      "distance": 8,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\96.png",
+      "expected_id": "base1-96",
+      "match_id": "base1-96",
+      "match_name": "Double Colorless Energy",
+      "distance": 3,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\97.png",
+      "expected_id": "base1-97",
+      "match_id": "base1-97",
+      "match_name": "Fighting Energy",
+      "distance": 2,
+      "is_correct": true,
+      "status": "matched"
+    },
+    {
+      "file_path": "../../card_images\\base1\\94.png",
+      "expected_id": "base1-94",
+      "match_id": "base1-94",
+      "match_name": "Potion",
+      "distance": 10,
+      "is_correct": true,
+      "status": "matched"
+    }
+  ]
+}

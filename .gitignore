@@ -1,1 +1,11 @@
 /media/originals
+
+# Card images database
+/card_images/*
+!/card_images/README.md
+
+# Generated hash files
+/src/data/temp_hashes.json
+
+# API credentials
+credentials.json
