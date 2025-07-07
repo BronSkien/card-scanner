@@ -2,14 +2,22 @@ import os
 import sys
 import json
 import base64
+import tempfile
 from io import BytesIO
 from PIL import Image
 import numpy as np
+import cv2
 import imagehash
 from flask import Flask, request, jsonify
 
+# Add the parent directory to the path so we can import from tools
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from tools import detector, scanner
+
 # Configuration
 hash_size = 16  # bytes - must match the scanner.py setting
+temp_dir = tempfile.gettempdir()  # Temporary directory for saving images
+
 # Support both Docker and local development paths
 if os.path.exists("/app/data/hashes_dphash_16.json"):
     hash_db_file = "/app/data/hashes_dphash_16.json"  # Docker path
@@ -21,6 +29,48 @@ if os.path.exists("/app/credentials.json"):
     api_key_file = "/app/credentials.json"  # Docker path
 else:
     api_key_file = "../../credentials.json"  # Local development path
+
+# Initialize the detector
+print("Initializing card detector...")
+try:
+    # Get device from environment variable or default to CPU
+    import torch
+    device = os.environ.get('PYTORCH_DEVICE', 'cpu')
+    print(f"Using device: {device}")
+    
+    # Use MMDetection model for card detection
+    detector_model = "rtmdet-ins_tiny_8xb32-300e_coco"
+    detector_weights = "https://download.openmmlab.com/mmdetection/v3.0/rtmdet/rtmdet-ins_tiny_8xb32-300e_coco/rtmdet-ins_tiny_8xb32-300e_coco_20220902_112414-78d0f50f.pth"
+    
+    # Create a custom detector class with the specified device
+    class CardDetector(detector.Detector):
+        def __init__(self, model, weights, device):
+            self.device = device
+            super().__init__(model, weights)
+    
+    # Initialize the detector with the specified device
+    card_detector = CardDetector(detector_model, detector_weights, device)
+    
+    # Function to detect cards using the detector
+    def detect_cards(image_path):
+        return card_detector.detect_objects(image_path, scoreThreshold=0.5)
+    
+    print("Card detector initialized successfully!")
+except Exception as e:
+    print(f"Warning: Could not initialize card detector: {e}")
+    print("Falling back to single card detection mode")
+    card_detector = None
+    
+    # Fallback function that returns the whole image as a single card
+    def detect_cards(image_path):
+        # Return the whole image as a single card
+        img = cv2.imread(image_path)
+        h, w = img.shape[:2]
+        return [{
+            'bbox': [0, 0, w, h],
+            'score': 1.0,
+            'mask': np.ones((h, w), dtype=np.uint8)
+        }]
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -148,12 +198,29 @@ def process_image(image_data):
         try:
             img_bytes = base64.b64decode(image_data)
             img_io = BytesIO(img_bytes)
-            img = Image.open(img_io)
+            pil_img = Image.open(img_io)
+            
+            # Convert PIL Image to OpenCV format
+            img = np.array(pil_img)
+            img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         except Exception as img_error:
             return {
                 "success": False,
                 "error": f"Invalid base64 image data: {str(img_error)}",
                 "help": "Make sure you're sending a valid base64-encoded image without any wrapping or formatting issues."
+            }
+        
+        # Save temp image for detector
+        temp_img_path = os.path.join(temp_dir, "temp_card_image.jpg")
+        cv2.imwrite(temp_img_path, img)
+        
+        # Detect cards in the image
+        detections = detect_cards(temp_img_path)
+        
+        if not detections or len(detections) == 0:
+            return {
+                "success": False,
+                "error": "No cards detected in the image"
             }
         
         # Load hash database
@@ -165,29 +232,61 @@ def process_image(image_data):
                 "path_checked": hash_db_file
             }
         
-        # Generate hash
-        card_hash = hash_image(img)
-        
-        # Find match
-        match, distance = find_match(card_hash, hash_dict)
-        
-        if match:
-            # Get market data
-            market_data = get_card_market_data(match['id'])
+        # Process each detected card
+        results = []
+        for i, detection in enumerate(detections):
+            # Extract card from image
+            card_img = extract_card(img, detection)
             
-            return {
-                "success": True,
-                "card_id": match['id'],
-                "name": match['name'],
-                "match_confidence": (100 - (distance * 5)) if distance <= 10 else 0,
-                "market_data": market_data
-            }
-        else:
-            return {
-                "success": False,
-                "error": "No match found for this card",
-                "best_distance": distance
-            }
+            if card_img is None:
+                results.append({
+                    "success": False,
+                    "card_index": i,
+                    "error": "Failed to extract card from image",
+                    "bbox": detection['bbox']
+                })
+                continue
+            
+            # Convert OpenCV image to PIL for hashing
+            pil_card = Image.fromarray(cv2.cvtColor(card_img, cv2.COLOR_BGR2RGB))
+            
+            # Generate hash
+            card_hash = hash_image(pil_card)
+            
+            # Find match
+            match, distance = find_match(card_hash, hash_dict)
+            
+            if match:
+                # Get market data
+                market_data = get_card_market_data(match['id'])
+                
+                results.append({
+                    "success": True,
+                    "card_index": i,
+                    "card_id": match['id'],
+                    "name": match['name'],
+                    "match_confidence": (100 - (distance * 5)) if distance <= 10 else 0,
+                    "market_data": market_data,
+                    "bbox": detection['bbox']
+                })
+            else:
+                results.append({
+                    "success": False,
+                    "card_index": i,
+                    "error": "No match found for this card",
+                    "best_distance": distance,
+                    "bbox": detection['bbox']
+                })
+        
+        # Clean up
+        if os.path.exists(temp_img_path):
+            os.remove(temp_img_path)
+        
+        return {
+            "success": True,
+            "cards": results,
+            "card_count": len(results)
+        }
     
     except Exception as e:
         import traceback
@@ -197,24 +296,56 @@ def process_image(image_data):
             "traceback": traceback.format_exc()
         }
 
+# Extract card from image using detection information
+def extract_card(img, detection):
+    try:
+        # Get the bounding box
+        x1, y1, x2, y2 = detection['bbox']
+        
+        # Crop the image to the bounding box
+        card_img = img[y1:y2, x1:x2]
+        
+        # If we have a mask, apply it
+        if 'mask' in detection and detection['mask'] is not None:
+            # Resize mask to match the bounding box size
+            mask = detection['mask']
+            mask_roi = mask[y1:y2, x1:x2]
+            
+            # Apply the mask
+            card_img = cv2.bitwise_and(card_img, card_img, mask=mask_roi)
+        
+        return card_img
+    except Exception as e:
+        print(f"Error extracting card: {e}")
+        return None
+
 # API endpoint for card identification
 @app.route('/identify', methods=['POST'])
 def identify_cards():
     try:
-        # Check if request has the image
-        if 'image' not in request.json:
-            return jsonify({"error": "No image provided"}), 400
+        data = request.get_json()
+        if not data or 'image' not in data:
+            return jsonify({
+                "success": False,
+                "error": "No image data provided"
+            }), 400
         
-        # Get base64 encoded image
-        image_data = request.json['image']
+        # Process the image and get results
+        result = process_image(data['image'])
         
-        # Process the image
-        result = process_image(image_data)
+        # Log the number of cards detected
+        if 'card_count' in result:
+            print(f"Detected {result['card_count']} cards in the image")
         
         return jsonify(result)
     
     except Exception as e:
-        return jsonify({"error": f"Server error: {str(e)}"}), 500
+        import traceback
+        return jsonify({
+            "success": False,
+            "error": f"Error processing request: {str(e)}",
+            "traceback": traceback.format_exc()
+        }), 500
 
 # API endpoint for card market data
 @app.route('/market-data/<card_id>', methods=['GET'])

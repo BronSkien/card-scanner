@@ -11,6 +11,17 @@ services:
     environment:
       - PYTHONPATH=/app
       - POKEMON_TCG_API_KEY=${POKEMON_TCG_API_KEY}
+      # Set to CPU by default, change to cuda:0 if you have a GPU
+      - PYTORCH_DEVICE=cpu
     volumes:
       # Mount credentials file if you prefer using it instead of environment variable
       - ./credentials.json:/app/credentials.json
+      # Mount a cache directory for model weights to avoid re-downloading
+      - ./model_cache:/root/.cache/torch
+    # Allocate more resources for deep learning
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
