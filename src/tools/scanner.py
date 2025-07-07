@@ -84,14 +84,28 @@ for path in possible_paths:
 
 # Try to load the hash file
 hash_dict = {}
-for path in possible_paths:
-    result = load_hash_file(path)
-    if result is not None:
-        hash_dict = result
-        print(f"Successfully loaded hash database from {path} with {len(result)} entries")
-        break
 
-# If we couldn't load a real hash database, create a minimal one with test data
+# First check if the direct file path exists (most reliable)
+direct_path = '/app/data/hashes_dphash_16.json'
+if os.path.exists(direct_path) and os.path.isfile(direct_path):
+    print(f"Found hash database at {direct_path}")
+    try:
+        with open(direct_path, 'r', encoding='utf-8') as json_file:
+            hash_dict = json.load(json_file)
+            print(f"Successfully loaded hash database with {len(hash_dict)} entries")
+    except Exception as e:
+        print(f"Error loading hash database from {direct_path}: {e}")
+
+# If direct path failed, try the other paths
+if not hash_dict:
+    for path in possible_paths:
+        result = load_hash_file(path)
+        if result is not None and len(result) > 0:
+            hash_dict = result
+            print(f"Successfully loaded hash database from {path} with {len(result)} entries")
+            break
+
+# If we still couldn't load a real hash database, create a minimal one with test data
 if not hash_dict:
     print(f"Warning: Could not find or load hash database file. Creating minimal hash database.")
     # Create a minimal dictionary with a test entry to avoid errors
@@ -106,6 +120,14 @@ if not hash_dict:
     print(f"Created minimal hash database with {len(hash_dict)} test entries")
 else:
     print(f"Using hash database with {len(hash_dict)} card hashes")
+    
+# Print some sample entries to verify the data structure
+if len(hash_dict) > 1:
+    sample_keys = list(hash_dict.keys())[:2]
+    print(f"Sample hash entries: {sample_keys}")
+    for key in sample_keys:
+        print(f"Sample entry: {key}: {hash_dict[key]}")
+
 
 def get_match_pool(detection, image, mirror):
     if 'match' in detection:

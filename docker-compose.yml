@@ -8,8 +8,8 @@ services:
       - "5000:5000"
     volumes:
       - ./credentials.json:/app/credentials.json
-      # Mount data directory with read-write access
-      - ./src/data:/app/data
+      # Mount hash database file directly to avoid directory issues
+      - ./src/data/hashes_dphash_16.json:/app/data/hashes_dphash_16.json
     environment:
       - PYTHONUNBUFFERED=1  # Ensure Python output is shown in logs
     logging:
