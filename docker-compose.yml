@@ -1,4 +1,4 @@
-version: '2.4'
+version: '2'
 
 services:
   card-scanner-api:
@@ -9,10 +9,7 @@ services:
       - "5000:5000"
     restart: unless-stopped
     environment:
-      - PYTHONPATH=/app
-      - POKEMON_TCG_API_KEY=${POKEMON_TCG_API_KEY}
-      - PYTORCH_DEVICE=cpu
+      PYTHONPATH: /app
+      PYTORCH_DEVICE: cpu
     volumes:
       - ./credentials.json:/app/credentials.json
-      - ./model_cache:/root/.cache/torch
-    mem_limit: 4g
