@@ -24,8 +24,15 @@ COPY src/api/requirements.txt /app/
 RUN pip install --no-cache-dir torch==1.9.0 torchvision==0.10.0
 
 # Install MMCV and MMDetection with specific versions
-RUN pip install --no-cache-dir mmcv-full==1.4.0 -f https://download.openmmlab.com/mmcv/dist/cu102/torch1.9.0/index.html
+# Use MMCV 1.3.17 which is compatible with MMDetection 2.20.0
+RUN pip install --no-cache-dir mmcv-full==1.3.17 -f https://download.openmmlab.com/mmcv/dist/cu102/torch1.9.0/index.html
+
+# Install MMDetection 2.20.0 and its dependencies
+RUN pip install --no-cache-dir terminaltables
 RUN pip install --no-cache-dir mmdet==2.20.0
+
+# Install model configs
+RUN pip install --no-cache-dir mmcls==0.23.0
 
 # Install remaining requirements
 RUN pip install --no-cache-dir -r requirements.txt
