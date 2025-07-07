@@ -1,14 +1,12 @@
 version: '2'
-
 services:
   card-scanner-api:
-    build:
-      context: .
-      dockerfile: src/api/Dockerfile
+    image: python:3.9-slim
     ports:
       - "5000:5000"
-    restart: unless-stopped
-    environment:
-      PYTHONPATH: /app
+    command: bash -c "apt-get update && apt-get install -y libgl1-mesa-glx libglib2.0-0 && pip install -r /app/requirements.txt && python /app/simple_card_api.py"
     volumes:
+      - ./src/api:/app
+      - ./src/tools:/app/tools
       - ./credentials.json:/app/credentials.json
+    working_dir: /app
