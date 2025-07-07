@@ -53,8 +53,25 @@ possible_paths = [
     os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', hash_filename),
     os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), hash_filename),
     os.path.join(os.getcwd(), 'data', hash_filename),
-    os.path.join(os.getcwd(), hash_filename)
+    os.path.join(os.getcwd(), hash_filename),
+    # Add hardcoded path for Docker container
+    '/app/data/hash_database.json'
 ]
+
+# Create a fallback hash database file if needed
+fallback_path = '/app/data/hash_database.json'
+try:
+    # If the original file exists but is seen as a directory, try to copy its contents
+    if os.path.exists('/app/data/hashes_dphash_16.json') and os.path.isdir('/app/data/hashes_dphash_16.json'):
+        print("Found hash file as directory, creating a new file...")
+        # Create an empty hash database file as fallback
+        with open(fallback_path, 'w', encoding='utf-8') as f:
+            f.write('{}')
+        print(f"Created fallback hash database at {fallback_path}")
+        possible_paths.insert(0, fallback_path)  # Try this path first
+except Exception as e:
+    print(f"Error creating fallback hash file: {e}")
+    pass
 
 # Print debug information
 print("Current working directory:", os.getcwd())

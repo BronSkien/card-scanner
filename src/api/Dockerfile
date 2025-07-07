@@ -23,9 +23,20 @@ COPY src/api/*.py /app/
 # Copy tools directory
 COPY src/tools /app/tools/
 
-# Create data directory and copy hash database
+# Create data directory and prepare for hash database
 RUN mkdir -p /app/data
-COPY src/data/hashes_dphash_16.json /app/data/
+
+# Copy the hash database file from the local src/data directory
+# First, copy to a temporary location to avoid volume mount conflicts
+COPY src/data/hashes_dphash_16.json /tmp/
+
+# Move the file to the final location with proper permissions
+RUN cp /tmp/hashes_dphash_16.json /app/data/ && \
+    chmod 644 /app/data/hashes_dphash_16.json && \
+    ls -la /app/data/ && \
+    echo "Hash database file copied successfully" && \
+    # Create a backup copy with a different name as fallback
+    cp /app/data/hashes_dphash_16.json /app/data/hash_database.json
 
 # Set working directory
 WORKDIR /app

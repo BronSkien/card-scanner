@@ -8,4 +8,11 @@ services:
       - "5000:5000"
     volumes:
       - ./credentials.json:/app/credentials.json
-      - ./src/data:/app/data
+      - ./src/data:/app/data:ro  # Read-only mount for data directory
+    environment:
+      - PYTHONUNBUFFERED=1  # Ensure Python output is shown in logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
