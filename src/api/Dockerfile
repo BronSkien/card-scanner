@@ -28,17 +28,21 @@ RUN mkdir -p /app/data
 
 # Copy the hash database file from the local src/data directory
 # First, copy to a temporary location to avoid volume mount conflicts
-COPY src/data/hashes_dphash_16.json /tmp/
+COPY src/data/hashes_dphash_16.json /tmp/hash_database.json
 
-# Move the file to the final location with proper permissions
-RUN cp /tmp/hashes_dphash_16.json /app/data/ && \
+# Verify the file was copied correctly and has content
+RUN ls -la /tmp/hash_database.json && \
+    echo "Hash database file size: $(stat -c %s /tmp/hash_database.json) bytes" && \
+    if [ "$(stat -c %s /tmp/hash_database.json)" -gt "1000" ]; then \
+        echo "Hash database file has content"; \
+    else \
+        echo "WARNING: Hash database file is too small, may be empty"; \
+    fi && \
+    # Create a copy in the data directory
+    mkdir -p /app/data && \
+    cp /tmp/hash_database.json /app/data/hashes_dphash_16.json && \
     chmod 644 /app/data/hashes_dphash_16.json && \
-    ls -la /app/data/ && \
-    echo "Hash database file copied successfully" && \
-    # Create a backup copy in /tmp which is always writable
-    cp /app/data/hashes_dphash_16.json /tmp/hash_database.json && \
-    chmod 644 /tmp/hash_database.json && \
-    echo "Created backup hash database in /tmp/hash_database.json"
+    echo "Hash database copied to /app/data/hashes_dphash_16.json"
 
 # Set working directory
 WORKDIR /app
