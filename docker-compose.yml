@@ -10,6 +10,5 @@ services:
     restart: unless-stopped
     environment:
       PYTHONPATH: /app
-      PYTORCH_DEVICE: cpu
     volumes:
       - ./credentials.json:/app/credentials.json

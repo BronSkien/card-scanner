@@ -1,12 +1,9 @@
 import numpy as np
-import torch
+import cv2
 import sys
 import functools
 import os
-import cv2
-import mmcv
 import warnings
-from mmdet.apis import init_detector, inference_detector
 
 # Suppress warnings
 warnings.filterwarnings("ignore")
@@ -25,88 +22,93 @@ def disable_print(func):
     return wrapper
 
 
-@disable_print
 class Detector:
-    def __init__(self, model_name, weights_url):
-        # For MMDetection 2.20.0, we need to use a config file
-        # We'll use a standard config for instance segmentation
-        config_file = self._get_config_for_model(model_name)
-        
-        # Set device
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        print(f"Using device: {self.device}")
-        
-        # Initialize the detector
-        self.model = init_detector(config_file, weights_url, device=self.device)
-        print(f"Model initialized: {model_name}")
-    
-    def _get_config_for_model(self, model_name):
-        # Map model names to their config files
-        # For rtmdet-ins_tiny, we'll use the RTMDet-Ins tiny config
-        if 'rtmdet-ins_tiny' in model_name:
-            from mmdet.apis import get_config
-            config = get_config('rtmdet/rtmdet-ins_tiny_8xb32-300e_coco.py')
-            return config
-        else:
-            # Default to a standard instance segmentation config
-            return 'mask_rcnn_r50_fpn_1x_coco.py'
+    def __init__(self, *args, **kwargs):
+        # No initialization needed for OpenCV detector
+        print("Initialized lightweight OpenCV card detector")
+        # Parameters for card detection
+        self.min_card_area = 20000  # Minimum area for a card in pixels
+        self.max_card_area = 500000  # Maximum area for a card in pixels
+        self.min_aspect_ratio = 0.5  # Minimum aspect ratio (width/height)
+        self.max_aspect_ratio = 1.5  # Maximum aspect ratio
 
-    @disable_print
     def detect_objects(self, img_path, scoreThreshold=0.5):
         # Load the image
-        img = mmcv.imread(img_path)
+        img = cv2.imread(img_path)
+        if img is None:
+            print(f"Error: Could not read image at {img_path}")
+            return []
+            
+        # Get image dimensions
+        img_h, img_w = img.shape[:2]
         
-        # Perform inference
-        result = inference_detector(self.model, img)
+        # Convert to grayscale
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         
-        # Process results
-        if hasattr(result, 'pred_instances'):
-            # MMDetection 3.x style results
-            bboxes = result.pred_instances.bboxes.cpu().numpy()
-            scores = result.pred_instances.scores.cpu().numpy()
-            masks = result.pred_instances.masks.cpu().numpy() if hasattr(result.pred_instances, 'masks') else None
-        else:
-            # MMDetection 2.x style results (list of arrays)
-            # Assuming result[0] contains bbox+score and result[1] contains masks
-            if isinstance(result, tuple):
-                bbox_result, mask_result = result
-                # Flatten the bbox results for all classes
-                bboxes = np.vstack([bbox_result[i] for i in range(len(bbox_result))])
-                scores = bboxes[:, 4] if bboxes.shape[1] > 4 else np.ones(bboxes.shape[0])
-                bboxes = bboxes[:, :4]
-                
-                # Process masks if available
-                if mask_result is not None:
-                    masks = np.stack([mask_result[i] for i in range(len(mask_result))], axis=0)
-                else:
-                    masks = None
-            else:
-                # Just bbox results
-                bboxes = np.vstack([result[i] for i in range(len(result))])
-                scores = bboxes[:, 4] if bboxes.shape[1] > 4 else np.ones(bboxes.shape[0])
-                bboxes = bboxes[:, :4]
-                masks = None
+        # Apply Gaussian blur to reduce noise
+        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
         
-        # If no masks, create binary masks from bounding boxes
-        if masks is None:
-            img_h, img_w = img.shape[:2]
-            masks = []
-            for bbox in bboxes:
-                mask = np.zeros((img_h, img_w), dtype=np.uint8)
-                x1, y1, x2, y2 = map(int, bbox)
-                mask[y1:y2, x1:x2] = 1
-                masks.append(mask)
-            masks = np.array(masks)
+        # Apply adaptive thresholding
+        thresh = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
+                                       cv2.THRESH_BINARY_INV, 11, 2)
         
-        # Create detection objects
+        # Find contours
+        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        
+        # Filter contours to find cards
         detections = []
-        for i in range(len(scores)):
-            if scores[i] > scoreThreshold:
+        for i, contour in enumerate(contours):
+            # Calculate contour area
+            area = cv2.contourArea(contour)
+            
+            # Filter by area
+            if area < self.min_card_area or area > self.max_card_area:
+                continue
+                
+            # Get bounding rectangle
+            x, y, w, h = cv2.boundingRect(contour)
+            
+            # Filter by aspect ratio
+            aspect_ratio = w / float(h)
+            if aspect_ratio < self.min_aspect_ratio or aspect_ratio > self.max_aspect_ratio:
+                continue
+                
+            # Create mask for this contour
+            mask = np.zeros((img_h, img_w), dtype=np.uint8)
+            cv2.drawContours(mask, [contour], 0, 255, -1)
+            
+            # Try to improve the contour with edge detection inside the bounding box
+            roi = img[y:y+h, x:x+w]
+            if roi.size == 0:  # Skip if ROI is empty
+                continue
+                
+            # Add detection with confidence score based on contour quality
+            # Calculate a confidence score based on how rectangular the contour is
+            rect = cv2.minAreaRect(contour)
+            box = cv2.boxPoints(rect)
+            box = np.int0(box)
+            rect_area = cv2.contourArea(box)
+            if rect_area == 0:  # Avoid division by zero
+                continue
+            confidence = min(area / rect_area, 1.0)  # How well the contour fits a rectangle
+            
+            # Only include if confidence is above threshold
+            if confidence > scoreThreshold:
                 detection = {
-                    'bbox': list(map(int, bboxes[i])),  # convert to int
-                    'score': float(scores[i]),
-                    'mask': masks[i] if masks is not None else None
+                    'bbox': [x, y, x + w, y + h],  # [x1, y1, x2, y2] format
+                    'score': float(confidence),
+                    'mask': mask
                 }
                 detections.append(detection)
         
+        # If no cards were detected, return the whole image as a single card
+        if not detections:
+            mask = np.ones((img_h, img_w), dtype=np.uint8)
+            detection = {
+                'bbox': [0, 0, img_w, img_h],
+                'score': 1.0,
+                'mask': mask
+            }
+            detections.append(detection)
+            
         return detections
