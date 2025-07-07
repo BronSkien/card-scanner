@@ -33,22 +33,8 @@ else:
 # Initialize the detector
 print("Initializing card detector...")
 try:
-    # Get device from environment variable or default to CPU
-    import torch
-    device = os.environ.get('PYTORCH_DEVICE', 'cpu')
-    print(f"Using device: {device}")
-    
-    # Set PyTorch device globally
-    if device.startswith('cuda') and torch.cuda.is_available():
-        torch.cuda.set_device(int(device.split(':')[1]) if ':' in device else 0)
-    
-    # Use MMDetection model for card detection
-    detector_model = "rtmdet-ins_tiny_8xb32-300e_coco"
-    detector_weights = "https://download.openmmlab.com/mmdetection/v3.0/rtmdet/rtmdet-ins_tiny_8xb32-300e_coco/rtmdet-ins_tiny_8xb32-300e_coco_20220902_112414-78d0f50f.pth"
-    
-    # Initialize the detector
-    # The detector will use the global PyTorch device setting
-    card_detector = detector.Detector(detector_model, detector_weights)
+    # Initialize the lightweight OpenCV-based detector
+    card_detector = detector.Detector()
     
     # Function to detect cards using the detector
     def detect_cards(image_path):

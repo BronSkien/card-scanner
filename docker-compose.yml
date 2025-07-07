@@ -8,5 +8,6 @@ services:
     volumes:
       - ./src/api:/app
       - ./src/tools:/app/tools
+      - ./src/api/requirements.txt:/app/requirements.txt
       - ./credentials.json:/app/credentials.json
     working_dir: /app
