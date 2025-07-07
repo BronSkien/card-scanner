@@ -35,8 +35,10 @@ RUN cp /tmp/hashes_dphash_16.json /app/data/ && \
     chmod 644 /app/data/hashes_dphash_16.json && \
     ls -la /app/data/ && \
     echo "Hash database file copied successfully" && \
-    # Create a backup copy with a different name as fallback
-    cp /app/data/hashes_dphash_16.json /app/data/hash_database.json
+    # Create a backup copy in /tmp which is always writable
+    cp /app/data/hashes_dphash_16.json /tmp/hash_database.json && \
+    chmod 644 /tmp/hash_database.json && \
+    echo "Created backup hash database in /tmp/hash_database.json"
 
 # Set working directory
 WORKDIR /app

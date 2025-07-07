@@ -58,12 +58,12 @@ possible_paths = [
     '/app/data/hash_database.json'
 ]
 
-# Create a fallback hash database file if needed
-fallback_path = '/app/data/hash_database.json'
+# Create a fallback hash database file in a writable location
+fallback_path = '/tmp/hash_database.json'  # Use /tmp which is always writable
 try:
-    # If the original file exists but is seen as a directory, try to copy its contents
-    if os.path.exists('/app/data/hashes_dphash_16.json') and os.path.isdir('/app/data/hashes_dphash_16.json'):
-        print("Found hash file as directory, creating a new file...")
+    # If the original file exists but is seen as a directory, try to create a fallback
+    if os.path.exists('/app/data/hashes_dphash_16.json'):
+        print("Creating fallback hash database in /tmp...")
         # Create an empty hash database file as fallback
         with open(fallback_path, 'w', encoding='utf-8') as f:
             f.write('{}')
@@ -71,7 +71,10 @@ try:
         possible_paths.insert(0, fallback_path)  # Try this path first
 except Exception as e:
     print(f"Error creating fallback hash file: {e}")
-    pass
+
+# Add the fallback path to the list of possible paths
+if fallback_path not in possible_paths:
+    possible_paths.append(fallback_path)
 
 # Print debug information
 print("Current working directory:", os.getcwd())
