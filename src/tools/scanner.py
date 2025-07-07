@@ -15,27 +15,67 @@ check_flipped = False # if no match, rotate 180 and check again
 # Use more flexible path resolution for Docker compatibility
 import os
 
+def load_hash_file(path):
+    """Safely load a JSON hash file, handling various error cases."""
+    try:
+        # Skip if it's a directory
+        if os.path.isdir(path):
+            print(f"Skipping directory: {path}")
+            return None
+            
+        # Check if file exists and is accessible
+        if not os.path.isfile(path):
+            print(f"File not found: {path}")
+            return None
+            
+        # Try to read and parse the file
+        with open(path, 'r', encoding='utf-8') as json_file:
+            data = json.load(json_file)
+            if not isinstance(data, dict):
+                print(f"Warning: Expected dictionary in {path}, got {type(data).__name__}")
+                return None
+            print(f"Successfully loaded hash database from {path}")
+            return data
+            
+    except json.JSONDecodeError as e:
+        print(f"Error parsing JSON in {path}: {e}")
+    except PermissionError as e:
+        print(f"Permission denied reading {path}: {e}")
+    except Exception as e:
+        print(f"Error loading {path}: {type(e).__name__}: {e}")
+    
+    return None
+
 # Try different possible locations for the hash file
 possible_paths = [
     os.path.join('data', hash_filename),
     os.path.join('/app/data', hash_filename),
-    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', hash_filename)
+    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', hash_filename),
+    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), hash_filename),
+    os.path.join(os.getcwd(), 'data', hash_filename),
+    os.path.join(os.getcwd(), hash_filename)
 ]
 
+# Print debug information
+print("Current working directory:", os.getcwd())
+print("Possible hash file paths:")
+for path in possible_paths:
+    print(f"  - {path} (exists: {os.path.exists(path)}, isfile: {os.path.isfile(path)})")
+
+# Try to load the hash file
 hash_dict = {}
 for path in possible_paths:
-    try:
-        with open(path, 'r', encoding='utf-8') as json_file:
-            hash_dict = json.load(json_file)
-            print(f"Successfully loaded hash database from {path}")
-            break
-    except FileNotFoundError:
-        continue
+    result = load_hash_file(path)
+    if result is not None:
+        hash_dict = result
+        break
 
 if not hash_dict:
-    print(f"Warning: Could not find hash database file. Tried paths: {possible_paths}")
+    print(f"Warning: Could not find or load hash database file. Tried paths: {possible_paths}")
     # Create an empty dictionary to avoid errors
     hash_dict = {}
+else:
+    print(f"Successfully loaded {len(hash_dict)} card hashes")
 
 def get_match_pool(detection, image, mirror):
     if 'match' in detection:

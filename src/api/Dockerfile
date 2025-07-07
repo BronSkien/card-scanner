@@ -23,6 +23,13 @@ COPY src/api/*.py /app/
 # Copy tools directory
 COPY src/tools /app/tools/
 
+# Create data directory and copy hash database
+RUN mkdir -p /app/data
+COPY src/data/hashes_dphash_16.json /app/data/
+
+# Set working directory
+WORKDIR /app
+
 # Make port 5000 available
 EXPOSE 5000
 
