@@ -8,12 +8,34 @@ import datetime
 from . import viewer
 
 hash_size = 16 # bytes
-hash_filename = 'hashes_dphash_16byte.json'
+hash_filename = 'hashes_dphash_16.json'  # Updated to match the actual filename
 min_similarity = 14*6.8 # lower is more exact
 check_flipped = False # if no match, rotate 180 and check again
 
-with open(f'data/{hash_filename}', 'r', encoding='utf-8') as json_file:
-    hash_dict = json.load(json_file)
+# Use more flexible path resolution for Docker compatibility
+import os
+
+# Try different possible locations for the hash file
+possible_paths = [
+    os.path.join('data', hash_filename),
+    os.path.join('/app/data', hash_filename),
+    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', hash_filename)
+]
+
+hash_dict = {}
+for path in possible_paths:
+    try:
+        with open(path, 'r', encoding='utf-8') as json_file:
+            hash_dict = json.load(json_file)
+            print(f"Successfully loaded hash database from {path}")
+            break
+    except FileNotFoundError:
+        continue
+
+if not hash_dict:
+    print(f"Warning: Could not find hash database file. Tried paths: {possible_paths}")
+    # Create an empty dictionary to avoid errors
+    hash_dict = {}
 
 def get_match_pool(detection, image, mirror):
     if 'match' in detection:

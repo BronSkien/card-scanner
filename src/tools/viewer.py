@@ -1,7 +1,8 @@
 import cv2
 import numpy as np
 import datetime
-from scanner.tools import scanner
+# Fix circular import
+from . import scanner
 
 class VideoFrameBuilder:
     _instance = None

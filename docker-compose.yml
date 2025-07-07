@@ -8,4 +8,4 @@ services:
       - "5000:5000"
     volumes:
       - ./credentials.json:/app/credentials.json
-      - ./data:/app/data
+      - ./src/data:/app/data
